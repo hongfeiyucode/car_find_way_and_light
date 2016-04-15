@@ -9,19 +9,19 @@ Project File Date:  04/15/2016
 <h2>Output:</h2>
 Build target 'Target 1'
 compiling test.c...
-test.c(34): warning:  #223-D: function "car_right_slow" declared implicitly
+test.c(51): warning:  #223-D: function "car_right_slow" declared implicitly
                         case 4: car_right_slow();if(out<=fudu)car_forward(); la2_state=last_state;last_state = 4; break;//100
-test.c(36): warning:  #223-D: function "car_left_slow" declared implicitly
+test.c(53): warning:  #223-D: function "car_left_slow" declared implicitly
                         case 1: car_left_slow();if(out<=fudu)car_forward(); la2_state=last_state;last_state = 1; break;//001
-test.c(43): warning:  #223-D: function "car_right_back" declared implicitly
+test.c(60): warning:  #223-D: function "car_right_back" declared implicitly
                                         case 6: if(out>fudu){car_right_back();out=0;}
-test.c(49): warning:  #223-D: function "car_left_back" declared implicitly
+test.c(66): warning:  #223-D: function "car_left_back" declared implicitly
                                         case 3: if(out>fudu){car_left_back();out=0;}
-test.c(116): warning:  #128-D: loop is not reachable
+test.c(147): warning:  #128-D: loop is not reachable
         while(1) 
 test.c: 5 warnings, 0 errors
 linking...
-Program Size: Code=30754 RO-data=7118 RW-data=364 ZI-data=1740  
+Program Size: Code=30766 RO-data=7118 RW-data=364 ZI-data=1740  
 FromELF: creating hex file...
 "..\OBJ\TEST.axf" - 0 Error(s), 5 Warning(s).
 Load "..\\OBJ\\TEST.axf" 
@@ -62,8 +62,7 @@ Application running ...
 </pre>
 </body>
 </html>
-
-Set JLink Project File to "D:\@@Project\—∞π‚–°≥µ\USER\JLinkSettings.ini"
+gs.ini"
 * JLink Info: Device "STM32F407ZG" selected (1024 KB flash, 128 KB RAM).
  
 JLink info:
@@ -85,7 +84,7 @@ ROMTableAddr = 0xE00FF003
 Target info:
 ------------
 Device: STM32F407ZG
-VTarget = 3.274V
+VTarget = 3.267V
 State of Pins: 
 TCK: 0, TDI: 1, TDO: 1, TMS: 1, TRES: 1, TRST: 1
 Hardware-Breakpoints: 6

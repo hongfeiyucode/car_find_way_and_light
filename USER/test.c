@@ -23,9 +23,26 @@ extern u8 USART3_RX_BYTE;
 	u8 la2_state = 0xff;
 	u8 out = 0;
 	u8 fudu =30;
+	u8 fudu2 =0;
 	u16 you;
 	u16 zuo;
 	u8 state=0;	
+	
+	
+
+	void xunguang()
+	{
+			you=Get_Adc_Average(ADC_CH5,20);
+			zuo=Get_Adc_Average(ADC_CH4,20);
+		  if(zuo>0x400||you>0x400)car_stop();
+			else if(abs(you-zuo)<0xef)car_forward();
+			else if(you>zuo)car_right();
+			else if(zuo>you)car_left();
+			
+	}
+
+	
+	
  void xunji()
  {
 	 		switch(KEY1<<2 | KEY0<<1 | KEY2)
@@ -60,12 +77,18 @@ extern u8 USART3_RX_BYTE;
 		delay_ms(1);
 	}
 
-	void xunguang()
+u8 KEY_State(u8 mode)
+{	 
+	static u8 key_up=1;//按键按松开标志
+	if(mode)key_up=1;  //支持连按		  
+	if(key_up)//&&(WK_UP==1)
 	{
-			you=Get_Adc_Average(ADC_CH5,20);
-			zuo=Get_Adc_Average(ADC_CH4,20);
-	}
-
+		delay_ms(10);//去抖动 
+		key_up=0;
+		if(WK_UP==1)return 1;
+	}else if(WK_UP==0)key_up=1; 	    
+ 	return 0;// 无按键按下
+}
 	
 int main(void)
 {	 
@@ -108,8 +131,16 @@ int main(void)
 	
 	while(1)
 	{
+/*		fudu2++;
+			if(fudu2>1000)
+			{
+				if(KEY_State(1)==0)state=1-state;
+				fudu2=0;
+			}
+*/
 			if(WK_UP==0)state=1-state;
-			if(state)car_right();//xunji();
+			while(WK_UP==0);
+			if(state==0)car_right();//xunji();//car_forward();//xunji();
 			else car_left();//xunguang();
 	}
 
