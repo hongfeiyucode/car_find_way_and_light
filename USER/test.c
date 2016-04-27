@@ -32,49 +32,81 @@ extern u8 USART3_RX_BYTE;
 
 	void xunguang()
 	{
-			you=Get_Adc_Average(ADC_CH5,20);
-			zuo=Get_Adc_Average(ADC_CH4,20);
-		  if(zuo>0x400||you>0x400)car_stop();
-			else if(abs(you-zuo)<0xef)car_forward();
-			else if(you>zuo)car_right();
-			else if(zuo>you)car_left();
+		adc4=Get_Adc_Average(4,20);//adc4ÊÇÓÒ±ßµÄ´«¸ÐÆ÷
+		adc5=Get_Adc_Average(5,20);//adc5ÊÇ×ó±ßµÄ´«¸ÐÆ÷
+		
+		
+		if(adc4<=0x400||adc5<=0x400)
+		{
+      car_stop();
+      continue;
+		}
+		else if(adc4>=0xdd0 && adc5>=0xdd0)
+		{
+			car_right();
+		}
+		else if(adc4>adc5&&adc4-adc5<0x08f||adc5>adc4&&adc5-adc4<0x8f)
+		{
+			 car_forward();
+			delay_ms(100);
+		}
+		
+      else if(adc4<adc5)//ÓÒ±ßÁÁ,×ó±ß°µ
+		{
+        car_right();
+		}
+      else     //×ó±ßÁÁ£¬ÓÒ±ß°µ
+		{ 
+        car_left();
 			
+			
+		}
 	}
 
 	
 	
  void xunji()
  {
-	 		switch(KEY1<<2 | KEY0<<1 | KEY2)
+		switch(KEY1<<2 | KEY0<<1 | KEY2)
 		{
-			case 5: car_forward();if(out<=fudu)for(ii=0;ii<10;ii++)car_forward(); la2_state=last_state;last_state = 5; break;//101
-			case 4: car_right_slow();if(out<=fudu)car_forward(); la2_state=last_state;last_state = 4; break;//100
-			case 6: car_right();if(out<=fudu)car_forward(); la2_state=last_state;last_state = 6; break;//110
-			case 1: car_left_slow();if(out<=fudu)car_forward(); la2_state=last_state;last_state = 1; break;//001
-			case 3: car_left(); if(out<=fudu)car_forward();la2_state=last_state;last_state = 3; break;//011
+			case 5: car_forward(); last_state = 5; break;//101
+			case 4: car_right_s(200); last_state = 4; break;//100
+			case 6: car_right_s(150); last_state = 6; break;//110
+			case 1: car_left_s(200); last_state = 1; break;//001
+			case 3: car_left_s(150); last_state = 3; break;//011
 			case 7: {
-				//la2_state=last_state;last_state = 7;
-				out=out+1;
+				out++;
 				switch(last_state){
 					case 4: 
-					case 6: if(out>fudu){car_right_back();out=0;}
-									else car_right_slow();
-									//if(la2_state==7&&last_state==7)car_right();
-									//else car_right_slow();
-									break; 
+					case 6: if(out>outfudu)
+									{
+										car_right_back();
+										chixu++;
+										if(chixu>chixufudu)
+										{
+											out=0;
+											chixu=0;
+										}
+									}
+									else car_right_s(250);break; 
 					case 1:
-					case 3: if(out>fudu){car_left_back();out=0;}
-									else car_left_slow();
-									//if(la2_state==7&&last_state==7)car_left();
-									//else car_left_slow();
-									break; 
+					case 3: if(out>outfudu)
+									{
+										car_left_back();chixu++;
+										if(chixu>chixufudu)
+										{
+											out=0;
+											chixu=0;
+										}
+									}
+									else car_left_s(250);break;
 					default: break;
+						
 				}
 			}
 //			case 0: car_stop(); break;
 			default: break;
 		}
-		delay_ms(1);
 	}
 
 u8 KEY_State(u8 mode)
@@ -140,8 +172,8 @@ int main(void)
 */
 			if(WK_UP==0)state=1-state;
 			while(WK_UP==0);
-			if(state==0)car_right();//xunji();//car_forward();//xunji();
-			else car_left();//xunguang();
+			if(state==0)xunji();
+			else xunguang();
 	}
 
 	while(1) 
